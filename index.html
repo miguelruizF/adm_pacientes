@@ -9,9 +9,34 @@
 <body>
     <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-screen">
         <h1 class="text-white font-bold text-center text-3xl p-12">ADMINISTRADOR DE PACIENTES DE VETERINARIA</h1>
-        <div class="grid-cols-2 bg-white">
-            <section></section>
-            <section></section>
+        <div class="grid-cols-2 bg-white w-3/4">
+            <section>
+                <h2>Datos del paciente</h2>
+            </section>
+            <section>
+                <h2>No hay citas, comienza creando una</h2>
+                <form action="">
+                    <label for="name">Nombre Mascota: </label>
+                    <input type="text" id="name" placeholder="Nombre Mascota">
+
+                    <label for="propietario">Propietario: </label>
+                    <input type="text" id="propietario" placeholder="Nombre Dueño de la Mascota">
+
+                    <label for="telefono">Telefono: </label>
+                    <input type="tel" id="telefono">
+
+                    <label for="fecha">Fecha: </label>
+                    <input type="date" id="fecha">
+
+                    <label for="hora">Hora: </label>
+                    <input type="datetime" id="hora">
+
+                    <label for="sintomas">Sintomas: </label>
+                    <textarea id="sintomas" cols="30" rows="10"></textarea>
+
+                    <button type="submit">Crear cita</button>
+                </form>
+            </section>
         </div>
     </div>
     
