@@ -29,7 +29,7 @@ class Citas{
 
     agregarCita(cita){
         this.citas = [...this.citas, cita];
-        console.log(this.citas)
+        // console.log(this.citas)
     }
 }
 
@@ -53,6 +53,66 @@ class UI{
         setTimeout(() => {
             divMensaje.remove();
         }, 3000);
+    }
+
+    imprimirCitas({citas}){
+        this.limpiarHTML();
+        // console.log(citas);
+        citas.forEach(cita => {
+            const {mascota, propietario,telefono,fecha,hora,sintomas, id} = cita;
+
+            //Crear HTML
+            const divCita = d.createElement("div");
+            divCita.classList.add("p-3");
+            divCita.setAttribute.id = id;
+
+            //Scripting de los elementos
+            const mascotaParrafo = d.createElement("h2");
+            mascotaParrafo.classList.add("font-bold");
+            mascotaParrafo.textContent = mascota;
+
+            const propietarioParrafo = d.createElement("p");
+            propietarioParrafo.innerHTML = `
+            <span class="text-bold">Propietario: </span> ${propietario}
+            `;
+
+            const telefonoParrafo = d.createElement("p");
+            telefonoParrafo.innerHTML = `
+            <span class="text-bold">Telefono: </span> ${telefono}
+            `;
+
+            const fechaParrafo = d.createElement("p");
+            fechaParrafo.innerHTML = `
+            <span class="text-bold">Fecha: </span> ${fecha}
+            `;
+
+            const horaParrafo = d.createElement("p");
+            horaParrafo.innerHTML = `
+            <span class="text-bold">Hora: </span> ${hora}
+            `;
+
+            const sintomasParrafo = d.createElement("p");
+            sintomasParrafo.innerHTML = `
+            <span class="text-bold">Sintomas: </span> ${sintomas}
+            `;
+
+            //Agregar elementos al div
+            divCita.appendChild(mascotaParrafo);
+            divCita.appendChild(propietarioParrafo);
+            divCita.appendChild(telefonoParrafo);
+            divCita.appendChild(fechaParrafo);
+            divCita.appendChild(horaParrafo);
+            divCita.appendChild(sintomasParrafo);
+
+            //Agregar al HTML
+            contCitas.appendChild(divCita);
+        });
+    }
+
+    limpiarHTML(){
+        while(contCitas.firstChild){
+            contCitas.removeChild(contCitas.firstChild)
+        }
     }
 }
 
@@ -97,6 +157,9 @@ function nuevaCita(e){
     // console.log(admCitas)
     ui.imprimirAlerta("Cita agregada correctamente");
     formulario.reset();
+
+    //Imprimir citas en UI
+    ui.imprimirCitas(admCitas   );
 }
 
 function reiniciarObjeto(){
