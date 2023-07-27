@@ -31,6 +31,10 @@ class Citas{
         this.citas = [...this.citas, cita];
         // console.log(this.citas)
     }
+
+    eliminarCita(id){
+        this.citas = this.citas.filter(cita =>cita.id !== id);
+    }
 }
 
 class UI{
@@ -63,7 +67,7 @@ class UI{
 
             //Crear HTML
             const divCita = d.createElement("div");
-            divCita.classList.add("p-3");
+            divCita.classList.add("p-3", "border-t", "border-r", "border-b", "border-l", "border-gray-400", "rounded-b", "mb-2");
             divCita.setAttribute.id = id;
 
             //Scripting de los elementos
@@ -96,6 +100,12 @@ class UI{
             <span class="text-bold">Sintomas: </span> ${sintomas}
             `;
 
+            //Eliminar cita
+            const btnEliminar = d.createElement("button");
+            btnEliminar.classList.add("bg-red-500", "hover:bg-red-700", "text-white", "font-bold", "p-2", "rounded");
+            btnEliminar.innerHTML = "Eliminar";
+            btnEliminar.onclick = () => eliminarCita(id);
+
             //Agregar elementos al div
             divCita.appendChild(mascotaParrafo);
             divCita.appendChild(propietarioParrafo);
@@ -103,6 +113,7 @@ class UI{
             divCita.appendChild(fechaParrafo);
             divCita.appendChild(horaParrafo);
             divCita.appendChild(sintomasParrafo);
+            divCita.appendChild(btnEliminar);
 
             //Agregar al HTML
             contCitas.appendChild(divCita);
@@ -169,4 +180,15 @@ function reiniciarObjeto(){
     infoObj.fecha = "",
     infoObj.hora = "",
     infoObj.sintomas = ""
+}
+
+function eliminarCita(id){
+    //Eliminar cita
+    admCitas.eliminarCita(id);
+
+    //Mostrar mensaje
+    ui.imprimirAlerta("La cita se elimino correctamente");
+
+    //Refrescar cita
+    ui.imprimirCitas(admCitas);
 }
