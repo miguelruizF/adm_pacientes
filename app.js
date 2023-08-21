@@ -1,3 +1,5 @@
+let DB;
+
 const d = document;
 const inputMascota = d.querySelector("#mascota"); 
 const inputPropietario = d.querySelector("#propietario"); 
@@ -257,5 +259,36 @@ function cargarEdicion(cita){
 
 //IndexDB
 function crearDB(){
+    //Version 1.0
+    const c_DB = window.indexedDB.open("citas", 1);
     
+    //Error
+    c_DB.onerror = function(){
+        console.log("hubo un error");
+    }
+    
+    //Success
+    c_DB.onsuccess = function(){
+        console.log("Se creo correctamente");
+
+        DB = c_DB.result;
+    }
+
+    //Esquema
+    c_DB.onupgradeneeded = function(e){
+        const db = e.target.result;
+        const objectStore = db.createObjectStore("citas",  {
+            keyPath: "id",
+            autoIncrement: true
+        });
+
+        //Definir columnas
+        objectStore.createIndex("mascota", "mascota", {unique:false});
+        objectStore.createIndex("propietario", "propietario", {unique:false});
+        objectStore.createIndex("telefono", "telefono", {unique:false});
+        objectStore.createIndex("fecha", "fecha", {unique:false});
+        objectStore.createIndex("hora", "hora", {unique:false});
+        objectStore.createIndex("sintomas", "sintomas", {unique:false});
+        objectStore.createIndex("id", "id", {unique:true});
+    }
 }
