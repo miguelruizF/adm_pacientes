@@ -12,7 +12,12 @@ const contCitas = d.querySelector("#citas");
 
 let editando;
 
-eventListener();
+window.onload = () => {
+    eventListener();
+
+    crearDB();
+}
+
 //Funcion general
 function eventListener(){
     inputMascota.addEventListener("input", datosCitas);
@@ -248,4 +253,9 @@ function cargarEdicion(cita){
     infoObj.hora = hora;
     infoObj.sintomas = sintomas;
     infoObj.id = id;
+}
+
+//IndexDB
+function crearDB(){
+    
 }
