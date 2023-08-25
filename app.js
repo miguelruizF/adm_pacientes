@@ -73,72 +73,146 @@ class UI{
         }, 3000);
     }
 
-    imprimirCitas({citas}){
+    // imprimirCitas({citas}){
+    imprimirCitas(){
         this.limpiarHTML();
         // console.log(citas);
-        citas.forEach(cita => {
-            const {mascota, propietario,telefono,fecha,hora,sintomas, id} = cita;
+        // citas.forEach(cita => {
+        //     const {mascota, propietario,telefono,fecha,hora,sintomas, id} = cita;
 
-            //Crear HTML
-            const divCita = d.createElement("div");
-            divCita.classList.add("p-3", "border-t", "border-r", "border-b", "border-l", "border-gray-400", "rounded-b", "mb-2");
-            divCita.setAttribute.id = id;
+        //     //Crear HTML
+        //     const divCita = d.createElement("div");
+        //     divCita.classList.add("p-3", "border-t", "border-r", "border-b", "border-l", "border-gray-400", "rounded-b", "mb-2");
+        //     divCita.setAttribute.id = id;
 
-            //Scripting de los elementos
-            const mascotaParrafo = d.createElement("h2");
-            mascotaParrafo.classList.add("font-bold");
-            mascotaParrafo.textContent = mascota;
+        //     //Scripting de los elementos
+        //     const mascotaParrafo = d.createElement("h2");
+        //     mascotaParrafo.classList.add("font-bold");
+        //     mascotaParrafo.textContent = mascota;
 
-            const propietarioParrafo = d.createElement("p");
-            propietarioParrafo.innerHTML = `
-            <span class="text-bold">Propietario: </span> ${propietario}
-            `;
+        //     const propietarioParrafo = d.createElement("p");
+        //     propietarioParrafo.innerHTML = `
+        //     <span class="text-bold">Propietario: </span> ${propietario}
+        //     `;
 
-            const telefonoParrafo = d.createElement("p");
-            telefonoParrafo.innerHTML = `
-            <span class="text-bold">Telefono: </span> ${telefono}
-            `;
+        //     const telefonoParrafo = d.createElement("p");
+        //     telefonoParrafo.innerHTML = `
+        //     <span class="text-bold">Telefono: </span> ${telefono}
+        //     `;
 
-            const fechaParrafo = d.createElement("p");
-            fechaParrafo.innerHTML = `
-            <span class="text-bold">Fecha: </span> ${fecha}
-            `;
+        //     const fechaParrafo = d.createElement("p");
+        //     fechaParrafo.innerHTML = `
+        //     <span class="text-bold">Fecha: </span> ${fecha}
+        //     `;
 
-            const horaParrafo = d.createElement("p");
-            horaParrafo.innerHTML = `
-            <span class="text-bold">Hora: </span> ${hora}
-            `;
+        //     const horaParrafo = d.createElement("p");
+        //     horaParrafo.innerHTML = `
+        //     <span class="text-bold">Hora: </span> ${hora}
+        //     `;
 
-            const sintomasParrafo = d.createElement("p");
-            sintomasParrafo.innerHTML = `
-            <span class="text-bold">Sintomas: </span> ${sintomas}
-            `;
+        //     const sintomasParrafo = d.createElement("p");
+        //     sintomasParrafo.innerHTML = `
+        //     <span class="text-bold">Sintomas: </span> ${sintomas}
+        //     `;
 
-            //Eliminar cita
-            const btnEliminar = d.createElement("button");
-            btnEliminar.classList.add("bg-red-500", "hover:bg-red-700", "text-white", "font-bold", "p-2", "rounded");
-            btnEliminar.innerHTML = "Eliminar";
-            btnEliminar.onclick = () => eliminarCita(id);
+        //     //Eliminar cita
+        //     const btnEliminar = d.createElement("button");
+        //     btnEliminar.classList.add("bg-red-500", "hover:bg-red-700", "text-white", "font-bold", "p-2", "rounded");
+        //     btnEliminar.innerHTML = "Eliminar";
+        //     btnEliminar.onclick = () => eliminarCita(id);
 
-            //Boton editar cita
-            const btnEditar =  d.createElement("button");
-            btnEditar.classList.add("bg-blue-500", "hover:bg-blue-700", "text-white", "font-bold", "p-2", "rounded", "ml-2");
-            btnEditar.textContent = "Editar cita";
-            btnEditar.onclick = () => cargarEdicion(cita);
+        //     //Boton editar cita
+        //     const btnEditar =  d.createElement("button");
+        //     btnEditar.classList.add("bg-blue-500", "hover:bg-blue-700", "text-white", "font-bold", "p-2", "rounded", "ml-2");
+        //     btnEditar.textContent = "Editar cita";
+        //     btnEditar.onclick = () => cargarEdicion(cita);
 
-            //Agregar elementos al div
-            divCita.appendChild(mascotaParrafo);
-            divCita.appendChild(propietarioParrafo);
-            divCita.appendChild(telefonoParrafo);
-            divCita.appendChild(fechaParrafo);
-            divCita.appendChild(horaParrafo);
-            divCita.appendChild(sintomasParrafo);
-            divCita.appendChild(btnEliminar);
-            divCita.appendChild(btnEditar);
+        //     //Agregar elementos al div
+        //     divCita.appendChild(mascotaParrafo);
+        //     divCita.appendChild(propietarioParrafo);
+        //     divCita.appendChild(telefonoParrafo);
+        //     divCita.appendChild(fechaParrafo);
+        //     divCita.appendChild(horaParrafo);
+        //     divCita.appendChild(sintomasParrafo);
+        //     divCita.appendChild(btnEliminar);
+        //     divCita.appendChild(btnEditar);
 
-            //Agregar al HTML
-            contCitas.appendChild(divCita);
-        });
+        //     //Agregar al HTML
+        //     contCitas.appendChild(divCita);
+        // });
+
+        //Leer contenido en la DB
+        const objectStore = DB.transaction("citas").objectStore("citas");
+
+        objectStore.openCursor().onsuccess = function(e) {
+            const cursor = e.target.result;
+            if(cursor){
+                const {mascota, propietario,telefono,fecha,hora,sintomas, id} = cursor.value;
+
+                //Crear HTML
+                const divCita = d.createElement("div");
+                divCita.classList.add("p-3", "border-t", "border-r", "border-b", "border-l", "border-gray-400", "rounded-b", "mb-2");
+                divCita.setAttribute.id = id;
+
+                //Scripting de los elementos
+                const mascotaParrafo = d.createElement("h2");
+                mascotaParrafo.classList.add("font-bold");
+                mascotaParrafo.textContent = mascota;
+
+                const propietarioParrafo = d.createElement("p");
+                propietarioParrafo.innerHTML = `
+                <span class="text-bold">Propietario: </span> ${propietario}
+                `;
+
+                const telefonoParrafo = d.createElement("p");
+                telefonoParrafo.innerHTML = `
+                <span class="text-bold">Telefono: </span> ${telefono}
+                `;
+
+                const fechaParrafo = d.createElement("p");
+                fechaParrafo.innerHTML = `
+                <span class="text-bold">Fecha: </span> ${fecha}
+                `;
+
+                const horaParrafo = d.createElement("p");
+                horaParrafo.innerHTML = `
+                <span class="text-bold">Hora: </span> ${hora}
+                `;
+
+                const sintomasParrafo = d.createElement("p");
+                sintomasParrafo.innerHTML = `
+                <span class="text-bold">Sintomas: </span> ${sintomas}
+                `;
+
+                //Eliminar cita
+                const btnEliminar = d.createElement("button");
+                btnEliminar.classList.add("bg-red-500", "hover:bg-red-700", "text-white", "font-bold", "p-2", "rounded");
+                btnEliminar.innerHTML = "Eliminar";
+                btnEliminar.onclick = () => eliminarCita(id);
+
+                //Boton editar cita
+                const btnEditar =  d.createElement("button");
+                btnEditar.classList.add("bg-blue-500", "hover:bg-blue-700", "text-white", "font-bold", "p-2", "rounded", "ml-2");
+                btnEditar.textContent = "Editar cita";
+                btnEditar.onclick = () => cargarEdicion(cita);
+
+                //Agregar elementos al div
+                divCita.appendChild(mascotaParrafo);
+                divCita.appendChild(propietarioParrafo);
+                divCita.appendChild(telefonoParrafo);
+                divCita.appendChild(fechaParrafo);
+                divCita.appendChild(horaParrafo);
+                divCita.appendChild(sintomasParrafo);
+                divCita.appendChild(btnEliminar);
+                divCita.appendChild(btnEditar);
+
+                //Agregar al HTML
+                contCitas.appendChild(divCita);
+
+                //Ir al siguiente elemento
+                cursor.continue();
+            }
+        }
     }
 
     limpiarHTML(){
@@ -150,6 +224,7 @@ class UI{
 
 const ui = new UI();
 const admCitas = new Citas();
+// ui.mostrarCitas();
 
 //Objeto - informacion del formulario
 const infoObj = {
@@ -199,7 +274,18 @@ function nuevaCita(e){
         //Crear nueva cita
         admCitas.agregarCita({...infoObj});
 
-        ui.imprimirAlerta("Cita agregada correctamente");
+        //Insertar datos en DB
+        const transaction = DB.transaction(["citas"], "readwrite");
+        
+        const objectStore = transaction.objectStore("citas");
+
+        objectStore.add(infoObj);
+
+        transaction.oncomplete = function(){
+            console.log("cita agregada");
+            ui.imprimirAlerta("Cita agregada correctamente");
+        }
+
         
     }
 
@@ -210,7 +296,8 @@ function nuevaCita(e){
     formulario.reset();
 
     //Imprimir citas en UI
-    ui.imprimirCitas(admCitas);
+    // ui.imprimirCitas(admCitas);
+    ui.imprimirCitas();
 }
 
 function reiniciarObjeto(){
@@ -230,7 +317,8 @@ function eliminarCita(id){
     ui.imprimirAlerta("La cita se elimino correctamente");
 
     //Refrescar cita
-    ui.imprimirCitas(admCitas);
+    // ui.imprimirCitas(admCitas);
+    ui.imprimirCitas();
 }
 
 //Funcion para editar datos
@@ -272,6 +360,8 @@ function crearDB(){
         console.log("Se creo correctamente");
 
         DB = c_DB.result;
+
+        ui.imprimirCitas();
     }
 
     //Esquema
