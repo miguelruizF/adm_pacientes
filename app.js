@@ -194,6 +194,7 @@ class UI{
                 const btnEditar =  d.createElement("button");
                 btnEditar.classList.add("bg-blue-500", "hover:bg-blue-700", "text-white", "font-bold", "p-2", "rounded", "ml-2");
                 btnEditar.textContent = "Editar cita";
+                const cita = cursor.value;
                 btnEditar.onclick = () => cargarEdicion(cita);
 
                 //Agregar elementos al div
@@ -255,16 +256,26 @@ function nuevaCita(e){
 
     //Editar cita
     if(editando){
-        ui.imprimirAlerta("Editado correctamente");
-
         //Edicion de datos
         admCitas.editarCita({...infoObj});
+        
+        //Edita en indexDB
+        const transaction = DB.transaction(["citas"], "readwrite");
+        const objectStore = transaction.objectStore("citas");
+        
+        objectStore.put(infoObj);
+        
+        transaction.oncomplete = () => {
+            ui.imprimirAlerta("Editado correctamente");
+            
+            formulario.querySelector("button[type='submit']").textContent = "Crear cita";
+            editando = false;
+        }
 
-        formulario.querySelector("button[type='submit']").textContent = "Crear cita";
+        transaction.onerror = () => {
+            console.log("Hubo un error");
+        }
 
-        editando = false;
-
-        //Pasar objeto a edicion
     }else{
         // titleCitas.textContent = "Listado de citas";
 
@@ -311,14 +322,24 @@ function reiniciarObjeto(){
 
 function eliminarCita(id){
     //Eliminar cita
-    admCitas.eliminarCita(id);
+    // admCitas.eliminarCita(id);
+    const transaction = DB.transaction(["citas"], "readwrite");
+    const objectStore = transaction.objectStore("citas");
+    objectStore.delete(id);
+    transaction.oncomplete = () => {
+        console.log("Cita eliminada correctamente");
+        //Mostrar mensaje
+        ui.imprimirAlerta("La cita se elimino correctamente");
+    
+        //Refrescar cita
+        // ui.imprimirCitas(admCitas);
+        ui.imprimirCitas();
+    }
 
-    //Mostrar mensaje
-    ui.imprimirAlerta("La cita se elimino correctamente");
+    transaction.onerror = () => {
+        console.log("Hubo un error");
+    }
 
-    //Refrescar cita
-    // ui.imprimirCitas(admCitas);
-    ui.imprimirCitas();
 }
 
 //Funcion para editar datos
